@@ -7,11 +7,6 @@ socket.on('connect', function () {
     console.log('newMessage',message);
   });
 
-  socket.emit('createMessage', {
-    from: 'yuval',
-    text: 'some text here'
-  });
-
 });
 
 socket.on('disconnect', function () {
