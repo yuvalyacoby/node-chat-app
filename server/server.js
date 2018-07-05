@@ -4,7 +4,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-const {isRealString} = require('./utils/validation');
+const {isRealString, isNameTaken} = require('./utils/validation');
 const {Users} = require('./utils/users');
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3001;
@@ -23,6 +23,11 @@ io.on('connection', (socket) => {
       return callback('Name and room name are required');
     }
 
+    if (isNameTaken(params.name, users.getUserList(params.room))) {
+      return callback('This name is already taken. Please choose a different name')
+    }
+
+    params.room = params.room.toLowerCase();
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id, params.name, params.room);
